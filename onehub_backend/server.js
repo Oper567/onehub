@@ -23,6 +23,8 @@ app.use('/api/messages', require('./routes/messages'));
 app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => res.send('OneHub API is operational.'));
+const cors = require('cors');
+app.use(cors()); // This allows your Flutter Web app to talk to your Vercel API!
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`?? Server on port ${PORT}`));
