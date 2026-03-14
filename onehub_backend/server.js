@@ -5,15 +5,14 @@ const { connectDB, sequelize } = require('./config/db');
 
 const app = express();
 
-// 1. ROBUST CORS SETUP
-// We use a single middleware to handle both standard requests and preflight OPTIONS
+// 1. CLEAN CORS INTEGRATION
+// We remove the app.options('*') line entirely. 
+// The cors() middleware handles preflight automatically.
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  credentials: true
 }));
 
 app.use(express.json());
@@ -35,9 +34,10 @@ app.use('/api/paystack', require('./routes/paystack'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/uploads', express.static('uploads'));
 
+// Health check route
 app.get('/', (req, res) => res.send('OneHub API is operational.'));
 
-// 4. PORT BINDING (Render + Local 5000 Support)
+// 4. PORT CONFIGURATION
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 OneHub Server is live on port ${PORT}`);
