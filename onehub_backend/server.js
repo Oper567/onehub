@@ -5,17 +5,17 @@ const { connectDB, sequelize } = require('./config/db');
 
 const app = express();
 
-// 1. ADVANCED CORS SETUP
-// This handles the "Preflight" OPTIONS request that is currently blocking your login
+// 1. UPDATED CORS SETUP
+// We changed '*' to '/(.*)' to comply with Express 5 wildcard rules
 app.use(cors({
-  origin: '*', // Allows your Netlify frontend to connect
+  origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Explicitly handle OPTIONS requests
-app.options('*', cors());
+// Explicitly handle OPTIONS requests using the new regex pattern
+app.options('/(.*)', cors());
 
 app.use(express.json());
 
@@ -38,11 +38,11 @@ app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => res.send('OneHub API is operational.'));
 
-// 4. VERCEL COMPATIBILITY
-// Vercel handles the port automatically; we only use app.listen for local testing
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
-}
+// 4. RENDER/PRODUCTION COMPATIBILITY
+// Render requires the app to listen on a port provided by the environment
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
 
 module.exports = app;
