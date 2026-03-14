@@ -1,0 +1,13 @@
+# 1. Add the Paystack variable to your environment file
+Add-Content -Path ".env" -Value "`nPAYSTACK_SECRET_KEY=sk_test_replace_this_with_your_actual_key"
+
+# 2. Create a .gitignore file to protect your secrets and ignore heavy folders
+$gitignoreCode = @'
+node_modules/
+.env
+uploads/
+.DS_Store
+'@
+Set-Content -Path ".gitignore" -Value $gitignoreCode -Force
+
+Write-Host "✅ Security Setup Complete: .env and .gitignore updated!" -ForegroundColor Green
