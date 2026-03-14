@@ -5,16 +5,16 @@ const { connectDB, sequelize } = require('./config/db');
 
 const app = express();
 
-// 1. FINAL CORS SETUP (Express 5 Compatible)
+// 1. ROBUST CORS SETUP
+// We use a single middleware to handle both standard requests and preflight OPTIONS
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
-
-// Use a named parameter ':path*' to satisfy Express 5's requirement
-app.options('/:path*', cors()); 
 
 app.use(express.json());
 
@@ -38,7 +38,6 @@ app.use('/uploads', express.static('uploads'));
 app.get('/', (req, res) => res.send('OneHub API is operational.'));
 
 // 4. PORT BINDING (Render + Local 5000 Support)
-// Render will use process.env.PORT, but it will fall back to 5000 locally
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 OneHub Server is live on port ${PORT}`);
